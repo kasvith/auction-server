@@ -1,6 +1,6 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -85,11 +85,10 @@ public class ServerView extends JFrame {
             }
         });
 
-        listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+        table.getModel().addTableModelListener(new TableModelListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
+            public void tableChanged(TableModelEvent e) {
                 int row = table.getSelectedRow();
-                int col = table.getSelectedColumn();
 
                 try {
                     float val = Float.parseFloat((String) table.getValueAt(row, 2));
@@ -99,9 +98,7 @@ public class ServerView extends JFrame {
                     StockItem stockItem = StockManager.getInstance().searchStock((String) table.getValueAt(row, 0));
                     table.setValueAt(Float.toString(stockItem.getPrice()), row, 2);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Unknown Error : \n" + ex.getMessage(), "Stock Manager", JOptionPane.ERROR_MESSAGE);
-                    ex.printStackTrace();
-                    System.exit(31);
+                    // Pass exceptions
                 }
             }
         });
